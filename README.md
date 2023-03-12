@@ -5,7 +5,7 @@ This tutorial will show you how to use cocotb Caravel APIs in order to create a 
 ## The steps: 
 
 ### 1. Install prerequisites:
-Make sure you followed the [quickstart guide]() to install the prerequisites and cloned the [cocotb verification repo]() 
+Make sure you followed the [quickstart guide]() to install the prerequisites and cloned the [Caravel cocotb verification repo]() 
 ### 2. Update design_info.yaml file:
 Make sure you updated the paths inside the ``design_info.yaml`` to match your paths as shown [here](). You can find the file in the ```caravel-dynamic-sims/cocotb/``` directory
 ### 3. Create the firmware program:
