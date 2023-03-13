@@ -27,7 +27,7 @@ void main(){
 * ``#include <common.h>``  is used to include the firmware APIs. This must be included in any firmware that will use the APIs provided. 
 * ``mgmt_gpio_o_enable();`` is a function used to set the management gpio to output (this is a single gpio pin inside used by the management soc). You can read more about this function [here](). 
 * ``mgmt_gpio_wr(0);`` is a function to set the management gpio pin to a certain value. Here I am setting it to 0 and later will set it to 1 after the configurations are finished. This is to make sure in the python testbench that the configurations are done and you can begin to check the gpios value. You can read more about this function [here](). 
-* ``enable_hk_spi(0);`` is used to disable housekeeping spi and this is required for gpio 3 to function correctly.  
+* ``enable_hk_spi(0);`` is used to disable housekeeping spi and this is required for gpio 3 to function as a normal gpio.  
 * ``configure_all_gpios(GPIO_MODE_MGMT_STD_OUTPUT);`` is a function used to configure all caravel’s 38 gpio pins with a certain mode. Here I chose the ``GPIO_MODE_MGMT_STD_OUTPUT`` mode because I will use the gpios as output and the management SoC will be the one using the gpios not the user project. You can read more about this function [here](). 
 * ``gpio_config_load();`` is a function to load the gpios configuration. It must be called whenever we change gpio configuration. 
 * ``set_gpio_l(0x8F);`` is a function used to set the value of the lower 32 gpios with a certain value. In this example the first 4 gpios and the 8th gpio will be set to 1 and the rest will be set to 0. you can read more about this function [here](). 
