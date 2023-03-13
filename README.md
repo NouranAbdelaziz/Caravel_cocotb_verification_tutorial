@@ -1,6 +1,6 @@
 # Caravel cocotb verification tutorial
 
-This tutorial will show you how to use cocotb Caravel APIs in order to create a testbench which sets Caravel gpios to have a certain value.
+This tutorial will show you how to use cocotb Caravel APIs in order to create a testbench which sets Caravel gpios to have a certain value. To do this, you first need to write the firmware which will run on the mangament SoC and you have to set the gpios mode to be management output and then monitor those gpios using python cocotb testbench and check them against the expected value.  
 
 ## The steps: 
 
@@ -17,7 +17,7 @@ void main(){
   mgmt_gpio_o_enable();
   mgmt_gpio_wr(0);
   enable_hk_spi(0); 
-  configure_all_gpios(GPIO_MODE_MGMT_STD_OUTPUT);
+  configure_all_gpios(GPIO_MODE_MGMT_STD_OUT);
   gpio_config_load();
   set_gpio_l(0x8F);
   mgmt_gpio_wr(1);
@@ -50,7 +50,7 @@ async def gpio_test(dut):
    gpios_value_str = caravelEnv.monitor_gpio(37, 0).binstr
    cocotb.log.info (f"All gpios '{gpios_value_str}'")
    gpio_value_int = caravelEnv.monitor_gpio(37, 0).integer
-   expected_gpio_value = 0x8F
+   expected_gpio_value = 0xF8
    if (gpio_value_int == expected_gpio_value):
       cocotb.log.info (f"[TEST] Pass the gpio value is '{gpio_value_int}'")
    else:
@@ -82,11 +82,50 @@ python3 verify_cocotb.py -test gpio_test -sim RTL -tag first_test
 ```
 You can know more about the argument options [here]()
 ### 6. Check if the test passed or failed:
-failed because an error in the c code
+When you run the above you will get this ouput:
+![image](https://user-images.githubusercontent.com/79912650/224642930-a2e7fcf1-50d1-422c-9936-c4c7dcd7f6c8.png)
+It shows that there is an error in the firmware c-code and it could'nt be compiled. You should check the `firmware_error.log` log file in the `/caravel-dynamic-sims-main/cocotb/sim/first_test/RTL-gpio_test` directory to check any firmware errors.
+In the log file you will find this error:
+```
+/home/nouran/caravel_user_project/verilog/dv/cocotb/gpio_test/gpio_test.c: In function 'main':
+/home/nouran/caravel_user_project/verilog/dv/cocotb/gpio_test/gpio_test.c:7:24: error: 'GPIO_MODE_MGMT_STD_OUT' undeclared (first use in this function); did you mean 'GPIO_MODE_MGMT_STD_OUTPUT'?
+    7 |    configure_all_gpios(GPIO_MODE_MGMT_STD_OUT);
+      |                        ^~~~~~~~~~~~~~~~~~~~~~
+      |                        GPIO_MODE_MGMT_STD_OUTPUT
+/home/nouran/caravel_user_project/verilog/dv/cocotb/gpio_test/gpio_test.c:7:24: note: each undeclared identifier is reported only once for each function it appears in
+```
 ### 7. Modify the firmware:
+The error was because passign the wrong gpio mode name. To fix this, you should change `configure_all_gpios(GPIO_MODE_MGMT_STD_OUT);` to `configure_all_gpios(GPIO_MODE_MGMT_STD_OUTPUT);` and rerun. 
 ### 8. Check if the test passed or failed:
-failed because the value of the gpio is different 
+ When you rerun you will get the following output:
+ ![image](https://user-images.githubusercontent.com/79912650/224656959-2ed7ff6e-a68d-4a35-98e6-2e3f5d37342a.png)
+The test has failed. You should check the `gpio_test.log` log file in the directory `caravel-dynamic-sims-main/cocotb/sim/first_test/RTL-gpio_test`. You will find the following error message:
+```
+1516250.00ns ERROR    cocotb                             [TEST] Fail the gpio value is :'143' expected 248
+1516250.00ns INFO     cocotb.regression                  repot_test.<locals>.wrapper_func [31mfailed[49m[39m
+                                                         Traceback (most recent call last):
+                                                           File "/home/nouran/caravel-dynamic-sims-main/cocotb/tests/common_functions/test_functions.py", line 130, in wrapper_func
+                                                             raise cocotb.result.TestComplete(f"Test failed {msg}")
+                                                         cocotb.result.TestComplete: Test failed with (0)criticals (1)errors (0)warnings 
+```
+This means the result weren't as expected and test failed message was raised because of the cocotb.log.error() function. 
 ### 9. Modify the python test bench:
+The error is because the expected value (0xF8) is not equal to the gpios value (0x8F). To fix this change the expected value to 0x8F `expected_gpio_value = 0x8F` and rerun
 ### 8. Check if the test passed or failed:
-passed !!
-
+When you rerun you will get this output:
+![image](https://user-images.githubusercontent.com/79912650/224659123-37cea76f-4c9f-4bc8-8278-2d70c9ff2694.png)
+This means the test has passed you can check the `full.log` file in the directory `/caravel-dynamic-sims-main/cocotb/sim/first_test/RTL-gpio_test` which contains all the logs (for the C firmware and python testbench) and you can see the following messages:
+```
+1516250.00ns INFO     cocotb                             [TEST] Pass the gpio value is '143'
+1516250.00ns INFO     cocotb                             Test passed with (0)criticals (0)errors (0)warnings 
+1516250.00ns INFO     cocotb                             Recommeneded timeout to use 61256 cycles
+1516250.00ns INFO     cocotb.regression                  repot_test.<locals>.wrapper_func passed
+1516250.00ns INFO     cocotb.regression                  ********************************************************************************************************************************
+                                                         ** TEST                                                                    STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                         ********************************************************************************************************************************
+                                                         ** tests.common_functions.test_functions.repot_test.<locals>.wrapper_func   PASS     1516250.00          22.79      66540.55  **
+                                                         ********************************************************************************************************************************
+                                                         ** TESTS=1 PASS=1 FAIL=0 SKIP=0                                                      1516250.00          22.80      66490.26  **
+                                                         ********************************************************************************************************************************
+```
+which shows that the test has passed successfully. 
