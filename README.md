@@ -34,7 +34,7 @@ void main(){
 * ``mgmt_gpio_wr(1);`` is a function to set the management gpio to 1 to indicate configurations are done as explained above.
 
 ### 4. Create the python testbench:
-The python testbench is used to monitor the signals of the Caravel chip just like the testbenches used in hardware simulators. 
+The python testbench is used to monitor the signals of the Caravel chip just like the testbenches used in hardware simulators. You can find a description for all the python testbench APIs [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/python_api.html#python-apis). 
 Continuing on the example above,  if we want to check whether the gpios are set to the correct value, we can do that using the following code:
 
 ```
