@@ -10,7 +10,7 @@ Make sure you followed the [quickstart guide](https://caravel-sim-infrastructure
 Make sure you updated the paths inside the ``design_info.yaml`` to match your paths as shown [here](https://github.com/efabless/caravel-sim-infrastructure/tree/main/cocotb#configure-the-repo). You can find the file in the ```caravel-sim-infrastructure/cocotb/``` directory
 ### 3. Create the firmware program:
 The firmware is written in C code and it is the program that will be running on the Caravel management SoC. You can use it to make any configurations you want. You can find a description for all the firmware C APIs [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#firmware-apis)
-For example, you can use it to configure the GPIO pins to have a certain value as shown in the code below:
+For example, you can use it to configure the GPIO pins to have a certain value as shown in the code below. You can find the source file [here](https://github.com/NouranAbdelaziz/caravel_user_project_cocotb_tutorial/blob/cocotb_dev/verilog/dv/cocotb/gpio_test/gpio_test.c):
 ```
 #include <common.h> 
 void main(){
@@ -35,7 +35,7 @@ void main(){
 
 ### 4. Create the python testbench:
 The python testbench is used to monitor the signals of the Caravel chip just like the testbenches used in hardware simulators. You can find a description for all the python testbench APIs [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/python_api.html#python-apis). 
-Continuing on the example above,  if we want to check whether the gpios are set to the correct value, we can do that using the following code:
+Continuing on the example above,  if we want to check whether the gpios are set to the correct value, we can do that using the following code. You can find the source file [here](https://github.com/NouranAbdelaziz/caravel_user_project_cocotb_tutorial/blob/cocotb_dev/verilog/dv/cocotb/gpio_test/gpio_test.py):
 
 ```
 from cocotb_includes import * 
