@@ -105,9 +105,9 @@ In the log file you will find this error:
 /home/nouran/caravel_user_project/verilog/dv/cocotb/gpio_test/gpio_test.c:7:24: note: each undeclared identifier is reported only once for each function it appears in
 Error: when generating hex
 ```
-### 7. Modify the firmware:
+### 9. Modify the firmware:
 The error was because passign the wrong gpio mode name. To fix this, you should change `configure_all_gpios(GPIO_MODE_MGMT_STD_OUT);` to `configure_all_gpios(GPIO_MODE_MGMT_STD_OUTPUT);` and rerun. 
-### 8. Check if the test passed or failed:
+### 10. Check if the test passed or failed:
  When you rerun you will get the following output:
  ```                                                     
 Fail: Test RTL-gpio_test has Failed for more info refer to /home/nouran/caravel-sim-infrastructure/cocotb/sim/first_test/RTL-gpio_test/gpio_test.log
@@ -135,9 +135,9 @@ The test has failed. You should check the `compilation.log` log file in the dire
                                                          **************************************************************************************************************************************
 ```
 This means the result weren't as expected and test failed message was raised because of the cocotb.log.error() function. 
-### 9. Modify the python test bench:
+### 11. Modify the python test bench:
 The error is because the expected value (0xF8) is not equal to the gpios value (0x8F). To fix this change the expected value to 0x8F `expected_gpio_value = 0x8F` and rerun
-### 8. Check if the test passed or failed:
+### 12. Check if the test passed or failed:
 When you rerun you will get this output:
 ```
      0.00ns INFO     cocotb                              [caravel] start powering up
