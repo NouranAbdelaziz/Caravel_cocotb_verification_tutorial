@@ -80,9 +80,9 @@ Create a folder called gpio_test in ``<caravel_user_project>/verilog/dv/cocotb/`
 ### 6. Import the new tests to ``cocotb_tests.py``:
 Add this line ``from gpio_test.gpio_test import gpio_test`` in ``caravel_user_project/verilog/dv/cocotb/cocotb_tests.py``
 ### 7. Run the test:
-To run the test you have to be in ``caravel-sim-infrastructure/cocotb/`` directory and run the ``verify_cocotb.py`` script using the following command
+To run the test you have to be in ``caravel-sim-infrastructure/cocotb/`` directory and run the following command
 ```
-python3 verify_cocotb.py -test gpio_test -sim RTL -tag first_test
+caravel_cocotb -test gpio_test -sim RTL -tag first_test
 ```
 You can know more about the argument options [here](https://github.com/efabless/caravel-sim-infrastructure/tree/main/cocotb#run-a-test)
 ### 8. Check if the test passed or failed:
