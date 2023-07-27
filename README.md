@@ -12,7 +12,7 @@ Make sure you updated the paths inside the ``design_info.yaml`` to match your pa
 The firmware is written in C code and it is the program that will be running on the Caravel management SoC. You can use it to make any configurations you want. You can find a description for all the firmware C APIs [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#firmware-apis)
 For example, you can use it to configure the GPIO pins to have a certain value as shown in the code below. You can find the source file [here](https://github.com/NouranAbdelaziz/caravel_user_project_cocotb_tutorial/blob/cocotb_dev/verilog/dv/cocotb/gpio_test/gpio_test.c):
 ```
-#include <common.h> 
+#include <firmware_apis.h>
 void main(){
   ManagmentGpio_outputEnable();
   ManagmentGpio_write(0);
@@ -24,7 +24,7 @@ void main(){
   return;
 }
 ```
-* ``#include <common.h>``  is used to include the firmware APIs. This must be included in any firmware that will use the APIs provided. 
+* ``#include <firmware_apis.h>``  is used to include the firmware APIs. This must be included in any firmware that will use the APIs provided. 
 * ``ManagmentGpio_outputEnable();`` is a function used to set the management gpio to output (this is a single gpio pin inside used by the management soc). You can read more about this function [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#_CPPv425ManagmentGpio_inputEnablev). 
 * ``ManagmentGpio_write(0);`` is a function to set the management gpio pin to a certain value. Here I am setting it to 0 and later will set it to 1 after the configurations are finished. This is to make sure in the python testbench that the configurations are done and you can begin to check the gpios value. You can read more about this function [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#_CPPv419ManagmentGpio_writeb). 
 * ``enableHkSpi(0);`` is used to disable housekeeping spi and this is required for gpio 3 to function as a normal gpio.  
