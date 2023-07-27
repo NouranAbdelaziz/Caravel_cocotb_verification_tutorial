@@ -14,24 +14,24 @@ For example, you can use it to configure the GPIO pins to have a certain value a
 ```
 #include <common.h> 
 void main(){
-  mgmt_gpio_o_enable();
-  mgmt_gpio_wr(0);
-  enable_hk_spi(0); 
-  configure_all_gpios(GPIO_MODE_MGMT_STD_OUT);
-  gpio_config_load();
-  set_gpio_l(0x8F);
-  mgmt_gpio_wr(1);
+  ManagmentGpio_outputEnable();
+  ManagmentGpio_write(0);
+  enableHkSpi(0); 
+  GPIOs_configureAll(GPIO_MODE_MGMT_STD_OUT);
+  GPIOs_loadConfigs();
+  GPIOs_writeLow(0x8F);
+  ManagmentGpio_write(1);
   return;
 }
 ```
 * ``#include <common.h>``  is used to include the firmware APIs. This must be included in any firmware that will use the APIs provided. 
-* ``mgmt_gpio_o_enable();`` is a function used to set the management gpio to output (this is a single gpio pin inside used by the management soc). You can read more about this function [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#_CPPv418mgmt_gpio_o_enablev). 
-* ``mgmt_gpio_wr(0);`` is a function to set the management gpio pin to a certain value. Here I am setting it to 0 and later will set it to 1 after the configurations are finished. This is to make sure in the python testbench that the configurations are done and you can begin to check the gpios value. You can read more about this function [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#_CPPv412mgmt_gpio_wrb). 
-* ``enable_hk_spi(0);`` is used to disable housekeeping spi and this is required for gpio 3 to function as a normal gpio.  
-* ``configure_all_gpios(GPIO_MODE_MGMT_STD_OUTPUT);`` is a function used to configure all caravel’s 38 gpio pins with a certain mode. Here I chose the ``GPIO_MODE_MGMT_STD_OUTPUT`` mode because I will use the gpios as output and the management SoC will be the one using the gpios not the user project. You can read more about this function [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#_CPPv419configure_all_gpios9gpio_mode). 
-* ``gpio_config_load();`` is a function to load the gpios configuration. It must be called whenever we change gpio configuration. 
-* ``set_gpio_l(0x8F);`` is a function used to set the value of the lower 32 gpios with a certain value. In this example the first 4 gpios and the 8th gpio will be set to 1 and the rest will be set to 0. you can read more about this function [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#_CPPv410set_gpio_lj). 
-* ``mgmt_gpio_wr(1);`` is a function to set the management gpio to 1 to indicate configurations are done as explained above.
+* ``ManagmentGpio_outputEnable();`` is a function used to set the management gpio to output (this is a single gpio pin inside used by the management soc). You can read more about this function [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#_CPPv425ManagmentGpio_inputEnablev). 
+* ``ManagmentGpio_write(0);`` is a function to set the management gpio pin to a certain value. Here I am setting it to 0 and later will set it to 1 after the configurations are finished. This is to make sure in the python testbench that the configurations are done and you can begin to check the gpios value. You can read more about this function [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#_CPPv419ManagmentGpio_writeb). 
+* ``enableHkSpi(0);`` is used to disable housekeeping spi and this is required for gpio 3 to function as a normal gpio.  
+* ``GPIOs_configureAll(GPIO_MODE_MGMT_STD_OUTPUT);`` is a function used to configure all caravel’s 38 gpio pins with a certain mode. Here I chose the ``GPIO_MODE_MGMT_STD_OUTPUT`` mode because I will use the gpios as output and the management SoC will be the one using the gpios not the user project. You can read more about this function [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#_CPPv418GPIOs_configureAll9gpio_mode). 
+* ``GPIOs_loadConfigs();`` is a function to load the gpios configuration. It must be called whenever we change gpio configuration. 
+* ``GPIOs_writeLow(0x8F);`` is a function used to set the value of the lower 32 gpios with a certain value. In this example the first 4 gpios and the 8th gpio will be set to 1 and the rest will be set to 0. you can read more about this function [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#_CPPv414GPIOs_writeLowj). 
+* ``ManagmentGpio_write(1);`` is a function to set the management gpio to 1 to indicate configurations are done as explained above.
 
 ### 4. Create the python testbench:
 The python testbench is used to monitor the signals of the Caravel chip just like the testbenches used in hardware simulators. You can find a description for all the python testbench APIs [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/python_api.html#python-apis). 
