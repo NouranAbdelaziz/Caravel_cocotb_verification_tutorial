@@ -7,7 +7,7 @@ This tutorial will show you how to use cocotb Caravel APIs in order to create a 
 ### 1. Install prerequisites:
 Make sure you followed the [quickstart guide](https://caravel-sim-infrastructure.readthedocs.io/en/latest/usage.html#quickstart-guide) to install the prerequisites and cloned the [Caravel cocotb simulation infrastructure repo](https://github.com/efabless/caravel-sim-infrastructure) 
 ### 2. Update design_info.yaml file:
-Make sure you updated the paths inside the ``design_info.yaml`` to match your paths as shown [here](https://github.com/efabless/caravel-sim-infrastructure/tree/main/cocotb#update-design_infoyaml). You can find the file in the ```caravel-sim-infrastructure/cocotb/``` directory
+Make sure you updated the paths inside the ``design_info.yaml`` to match your paths as shown [here](https://github.com/efabless/caravel-sim-infrastructure/tree/main/cocotb#update-design_infoyaml). You can find the file in the ```/home/nouran/caravel_user_project/verilog/dv/cocotb/design_info.yaml``` directory
 ### 3. Create the firmware program:
 The firmware is written in C code and it is the program that will be running on the Caravel management SoC. You can use it to make any configurations you want. You can find a description for all the firmware C APIs [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#firmware-apis)
 For example, you can use it to configure the GPIO pins to have a certain value as shown in the code below. You can find the source file [here](https://github.com/NouranAbdelaziz/caravel_user_project_cocotb_tutorial/blob/cocotb_dev/verilog/dv/cocotb/gpio_test/gpio_test.c):
