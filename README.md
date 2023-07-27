@@ -12,7 +12,7 @@ Make sure you updated the paths inside the ``design_info.yaml`` to match your pa
 The firmware is written in C code and it is the program that will be running on the Caravel management SoC. You can use it to make any configurations you want. You can find a description for all the firmware C APIs [here](https://caravel-sim-infrastructure.readthedocs.io/en/latest/C_api.html#firmware-apis)
 For example, you can use it to configure the GPIO pins to have a certain value as shown in the code below. You can find the source file [here](https://github.com/NouranAbdelaziz/caravel_user_project_cocotb_tutorial/blob/cocotb_dev/verilog/dv/cocotb/gpio_test/gpio_test.c):
 ```
-#include <firmware_apis.h>
+#include <firmware_apis.h> 
 void main(){
   ManagmentGpio_outputEnable();
   ManagmentGpio_write(0);
