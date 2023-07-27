@@ -80,7 +80,7 @@ Create a folder called gpio_test in ``<caravel_user_project>/verilog/dv/cocotb/`
 ### 6. Import the new tests to ``cocotb_tests.py``:
 Add this line ``from gpio_test.gpio_test import gpio_test`` in ``caravel_user_project/verilog/dv/cocotb/cocotb_tests.py``
 ### 7. Run the test:
-To run the test you have to be in ``caravel-sim-infrastructure/cocotb/`` directory and run the following command
+To run the test you have to be in ``caravel_user_project/verilog/dv/cocotb`` directory and run the following command
 ```
 caravel_cocotb -test gpio_test -sim RTL -tag first_test
 ```
@@ -88,21 +88,20 @@ You can know more about the argument options [here](https://github.com/efabless/
 ### 8. Check if the test passed or failed:
 When you run the above you will get this ouput:
 ```
-test:['gpio_test'], testlist:None sim: ['RTL']
-Run tag: first_test
+Run tag: first_test 
 invalid mail None
 Start running test:  RTL-gpio_test 
-Error: Fail to compile the C code for more info refer to /home/nouran/timer_user_project/verilog/dv/cocotb/sim/gpio_test/RTL-debug/firmware.log
+Error: Fail to compile the C code for more info refer to /home/nouran/caravel_user_project/verilog/dv/cocotb/sim/first_test/RTL-gpio_test/firmware.log
 ```
-It shows that there is an error in the firmware c-code and it could'nt be compiled. You should check the `firmware.log` log file in the `caravel_user_project/verilog/dv/cocotb/sim/gpio_test/RTL-debug/firmware.log` directory to check any firmware errors.
+It shows that there is an error in the firmware c-code and it could'nt be compiled. You should check the `firmware.log` log file in the `caravel_user_project/verilog/dv/cocotb/sim/first_test/RTL-gpio_test/firmware.log` directory to check any firmware errors.
 In the log file you will find this error:
 ```
 /home/nouran/caravel_user_project/verilog/dv/cocotb/gpio_test/gpio_test.c: In function 'main':
-/home/nouran/caravel_user_project/verilog/dv/cocotb/gpio_test/gpio_test.c:7:24: error: 'GPIO_MODE_MGMT_STD_OUT' undeclared (first use in this function); did you mean 'GPIO_MODE_MGMT_STD_OUTPUT'?
-    7 |    configure_all_gpios(GPIO_MODE_MGMT_STD_OUT);
-      |                        ^~~~~~~~~~~~~~~~~~~~~~
-      |                        GPIO_MODE_MGMT_STD_OUTPUT
-/home/nouran/caravel_user_project/verilog/dv/cocotb/gpio_test/gpio_test.c:7:24: note: each undeclared identifier is reported only once for each function it appears in
+/home/nouran/caravel_user_project/verilog/dv/cocotb/gpio_test/gpio_test.c:23:22: error: 'GPIO_MODE_MGMT_STD_OUT' undeclared (first use in this function); did you mean 'GPIO_MODE_MGMT_STD_OUTPUT'?
+   23 |   GPIOs_configureAll(GPIO_MODE_MGMT_STD_OUT);  //GPIOs_configureAll(GPIO_MODE_MGMT_STD_OUT);
+      |                      ^~~~~~~~~~~~~~~~~~~~~~
+      |                      GPIO_MODE_MGMT_STD_OUTPUT
+/home/nouran/caravel_user_project/verilog/dv/cocotb/gpio_test/gpio_test.c:23:22: note: each undeclared identifier is reported only once for each function it appears in
 Error: when generating hex
 ```
 ### 9. Modify the firmware:
