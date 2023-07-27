@@ -58,10 +58,8 @@ async def gpio_test(dut):
    else:
       cocotb.log.error (f"[TEST] Fail the gpio value is :'{hex(gpio_value_int)}' expected {hex(expected_gpio_value)}")
 ```
-* ``from caravel_cocotb.caravel_interfaces import test_configure
-from caravel_cocotb.caravel_interfaces import report_test
-from caravel_cocotb.caravel_interfaces import UART
-from caravel_cocotb.caravel_interfaces import SPI`` is to include the python APIs for Caravel. It must be included in any python testbench you create 
+* ``from caravel_cocotb.caravel_interfaces import test_configure`` , ``from caravel_cocotb.caravel_interfaces import report_test``, 
+``from caravel_cocotb.caravel_interfaces import UART`` ,  ``from caravel_cocotb.caravel_interfaces import SPI`` is to include the python APIs for Caravel. It must be included in any python testbench you create 
 * ``import cocotb`` is to import cocotb library. It must be included in any python testbench you create 
 * ``@cocotb.test()`` is a function wrapper which must be used before any cocotb test. You can read more about it [here](https://docs.cocotb.org/en/stable/quickstart.html#creating-a-test)
 * ``@report_test `` is a function wrapper which is used to configure the test reports
@@ -114,10 +112,12 @@ The error was because passign the wrong gpio mode name. To fix this, you should 
 ### 10. Check if the test passed or failed:
  When you rerun you will get the following output:
  ```                                                     
-Fail: Test RTL-gpio_test has Failed for more info refer to /home/nouran/caravel_user_project/verilog/dv/cocotb/sim/gpio_test/compilation/compilation.log
+Fail: Test RTL-gpio_test has Failed for more info refer to /home/nouran/caravel_user_project/verilog/dv/cocotb/sim/first_test/RTL-gpio_test/gpio_test.log
+
  ```
 
-The test has failed. You should check the `compilation.log` log file in the directory `caravel_user_project/verilog/dv/cocotb/sim/gpio_test/compilation/compilation.log`. You will find the following error message:
+The test has failed. You should check the `gpio_test.log` log file in the directory ``caravel_user_project/verilog/dv/cocotb/sim/first_test/RTL-gpio_test/gpio_test.log``. 
+You will find the following error message:
 ```
      0.00ns INFO     cocotb                              [caravel] start powering up
    225.00ns INFO     cocotb                              [caravel] power up -> connect vdd
@@ -125,18 +125,22 @@ The test has failed. You should check the `compilation.log` log file in the dire
    475.00ns INFO     cocotb                              [caravel] disable housekeeping SPI transmission
    525.00ns INFO     cocotb                              [caravel] start resetting
   1050.00ns INFO     cocotb                              [caravel] finish resetting
-1578050.00ns INFO     cocotb                             All gpios '00000000000000000000000000000010001111'
-1578050.00ns INFO     cocotb                             [TEST] Pass the gpio value is '0x8f'
-1578050.00ns INFO     cocotb                             Test passed with (0)criticals (0)errors (0)warnings 
-1578050.00ns INFO     cocotb                             Cycles consumed = 63122 recommened timeout = 63754 cycles
-1578050.00ns INFO     cocotb.regression                  report_test.<locals>.wrapper_func [32mpassed[49m[39m
-1578050.00ns INFO     cocotb.regression                  **************************************************************************************************************************************
-                                                         ** TEST                                                                          STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
-                                                         **************************************************************************************************************************************
-                                                         ** interfaces.common_functions.test_functions.report_test.<locals>.wrapper_func  [32m PASS [49m[39m    1578050.00          40.21      39247.62  **
-                                                         **************************************************************************************************************************************
-                                                         ** TESTS=1 PASS=1 FAIL=0 SKIP=0                                                            1578050.00          40.22      39233.14  **
-                                                         **************************************************************************************************************************************
+  1325.00ns INFO     cocotb                              [caravel] release housekeeping SPI transmission
+1607150.00ns INFO     cocotb                             All gpios '00000000000000000000000000000010001111'
+1607150.00ns ERROR    cocotb                             [TEST] Fail the gpio value is :'0x8f' expected 0xf8
+1607150.00ns INFO     cocotb.regression                  report_test.<locals>.wrapper_func [31mfailed[49m[39m
+                                                         Traceback (most recent call last):
+                                                           File "/usr/local/lib/python3.8/dist-packages/caravel_cocotb/interfaces/common_functions/test_functions.py", line 126, in wrapper_func
+                                                             raise cocotb.result.TestComplete(f"Test failed {msg}")
+                                                         cocotb.result.TestComplete: Test failed with (0)criticals (1)errors (0)warnings 
+1607150.00ns INFO     cocotb.regression                  *****************************************************************************************************************************************************
+                                                         ** TEST                                                                                         STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                         *****************************************************************************************************************************************************
+                                                         ** caravel_cocotb.interfaces.common_functions.test_functions.report_test.<locals>.wrapper_func  [31m FAIL [49m[39m    1607150.00          24.15      66545.50  **
+                                                         *****************************************************************************************************************************************************
+                                                         ** TESTS=1 PASS=0 FAIL=1 SKIP=0                                                                           1607150.00          24.17      66499.24  **
+                                                         *****************************************************************************************************************************************************
+                                                         
 ```
 This means the result weren't as expected and test failed message was raised because of the cocotb.log.error() function. 
 ### 11. Modify the python test bench:
@@ -144,52 +148,26 @@ The error is because the expected value (0xF8) is not equal to the gpios value (
 ### 12. Check if the test passed or failed:
 When you rerun you will get this output:
 ```
-     0.00ns INFO     cocotb                              [caravel] start powering up
-   225.00ns INFO     cocotb                              [caravel] power up -> connect vdd
-   225.00ns INFO     cocotb                              [caravel] power up -> connect vcc
-   475.00ns INFO     cocotb                              [caravel] disable housekeeping SPI transmission
-   525.00ns INFO     cocotb                              [caravel] start resetting
-  1050.00ns INFO     cocotb                              [caravel] finish resetting
-1578050.00ns INFO     cocotb                             All gpios '00000000000000000000000000000010001111'
-1578050.00ns ERROR    cocotb                             [TEST] Fail the gpio value is :'0x8f' expected 0xf8
-1578050.00ns INFO     cocotb.regression                  report_test.<locals>.wrapper_func [31mfailed[49m[39m
-                                                         Traceback (most recent call last):
-                                                           File "/home/nouran/caravel-sim-infrastructure/cocotb/interfaces/common_functions/test_functions.py", line 120, in wrapper_func
-                                                             raise cocotb.result.TestComplete(f"Test failed {msg}")
-                                                         cocotb.result.TestComplete: Test failed with (0)criticals (1)errors (0)warnings 
-1578050.00ns INFO     cocotb.regression                  **************************************************************************************************************************************
-                                                         ** TEST                                                                          STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
-                                                         **************************************************************************************************************************************
-                                                         ** interfaces.common_functions.test_functions.report_test.<locals>.wrapper_func  [31m FAIL [49m[39m    1578050.00          40.47      38988.73  **
-                                                         **************************************************************************************************************************************
-                                                         ** TESTS=1 PASS=0 FAIL=1 SKIP=0                                                            1578050.00          40.49      38974.22  **
-                                                         **************************************************************************************************************************************
-                                                         
-```
-
-This means the test has passed you can check the `compilation.log` file in the directory `caravel_user_project/verilog/dv/cocotb/sim/gpio_test/compilation/compilation.log` which contains all the logs (for the C firmware and python testbench) and you can see the following messages:
-```
-docker command for running iverilog and cocotb:
-% docker run --init -u $(id -u nouran):$(id -g nouran) -it --sig-proxy=true -e COCOTB_RESULTS_FILE=/home/nouran/caravel-sim-infrastructure/cocotb/sim/first_test/RTL-gpio_test/seed.xml -e CARAVEL_PATH=/home/nouran/caravel//verilog -e CARAVEL_VERILOG_PATH=/home/nouran/caravel//verilog -e VERILOG_PATH=/home/nouran/caravel_mgmt_soc_litex//verilog -e PDK_ROOT=/home/nouran/OpenLane/pdks/ -e PDK=sky130A -e USER_PROJECT_VERILOG=/home/nouran/caravel_user_project/verilog -v /home/nouran/caravel-sim-infrastructure/cocotb:/home/nouran/caravel-sim-infrastructure/cocotb -v /home/nouran/caravel/:/home/nouran/caravel/ -v /home/nouran/caravel_mgmt_soc_litex/:/home/nouran/caravel_mgmt_soc_litex/ -v /home/nouran/OpenLane/pdks/:/home/nouran/OpenLane/pdks/ -v /home/nouran/caravel_user_project:/home/nouran/caravel_user_project efabless/dv:cocotb sh -ec 'cd /home/nouran/caravel-sim-infrastructure/cocotb/sim/first_test/RTL-gpio_test && iverilog -Ttyp  -DUSE_POWER_PINS -DUNIT_DELAY=#1 -DCOCOTB_SIM -DFUNCTIONAL -DWAVE_GEN -DIVERILOG -Dsky130 -DCPU_TYPE_VexRISC -DCOCOTB_PATH=\"/home/nouran/caravel-sim-infrastructure/cocotb\" -DTAG=\"first_test\" -DCARAVEL_ROOT=\"/home/nouran/caravel/\" -DMCW_ROOT=\"/home/nouran/caravel_mgmt_soc_litex/\" -DUSER_PROJECT_ROOT=\"/home/nouran/caravel_user_project\" -DSIM_PATH=\"/home/nouran/caravel-sim-infrastructure/cocotb/sim/\" -DSIM=\"RTL\" -DTESTNAME=\"gpio_test\" -DFTESTNAME=\"RTL-gpio_test\" -DSIM_DIR=\"/home/nouran/caravel-sim-infrastructure/cocotb/sim/first_test\" -DCORNER_nom  -o /home/nouran/caravel-sim-infrastructure/cocotb/sim/first_test/RTL-gpio_test/sim.vvp /home/nouran/caravel-sim-infrastructure/cocotb/RTL/caravel_top.sv -s caravel_top  && TESTCASE=gpio_test MODULE=module_trail  vvp -M $(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus /home/nouran/caravel-sim-infrastructure/cocotb/sim/first_test/RTL-gpio_test/sim.vvp +USE_POWER_PINS +UNIT_DELAY=#1 +COCOTB_SIM +FUNCTIONAL +WAVE_GEN +IVERILOG +sky130 +CPU_TYPE_VexRISC +COCOTB_PATH=\"/home/nouran/caravel-sim-infrastructure/cocotb\" +TAG=\"first_test\" +CARAVEL_ROOT=\"/home/nouran/caravel/\" +MCW_ROOT=\"/home/nouran/caravel_mgmt_soc_litex/\" +USER_PROJECT_ROOT=\"/home/nouran/caravel_user_project\" +SIM_PATH=\"/home/nouran/caravel-sim-infrastructure/cocotb/sim/\" +SIM=\"RTL\" +TESTNAME=\"gpio_test\" +FTESTNAME=\"RTL-gpio_test\" +SIM_DIR=\"/home/nouran/caravel-sim-infrastructure/cocotb/sim/first_test\" +CORNER_nom +__USER_DEFINES_H +GPIO_MODE_INVALID=0 +GPIO_MODE_MGMT_STD_INPUT_NOPULL=1027 +GPIO_MODE_MGMT_STD_INPUT_PULLDOWN=3073 +GPIO_MODE_MGMT_STD_INPUT_PULLUP=2049 +GPIO_MODE_MGMT_STD_OUTPUT=6153 +GPIO_MODE_MGMT_STD_BIDIRECTIONAL=6145 +GPIO_MODE_MGMT_STD_ANALOG=11 +GPIO_MODE_USER_STD_INPUT_NOPULL=1026 +GPIO_MODE_USER_STD_INPUT_PULLDOWN=3072 +GPIO_MODE_USER_STD_INPUT_PULLUP=2048 +GPIO_MODE_USER_STD_OUTPUT=6152 +GPIO_MODE_USER_STD_BIDIRECTIONAL=6144 +GPIO_MODE_USER_STD_OUT_MONITORED=6146 +GPIO_MODE_USER_STD_ANALOG=10 +USER_CONFIG_GPIO_5_INIT=6153 +USER_CONFIG_GPIO_6_INIT=6153 +USER_CONFIG_GPIO_7_INIT=6153 +USER_CONFIG_GPIO_8_INIT=6153 +USER_CONFIG_GPIO_9_INIT=6153 +USER_CONFIG_GPIO_10_INIT=6153 +USER_CONFIG_GPIO_11_INIT=6153 +USER_CONFIG_GPIO_12_INIT=6153 +USER_CONFIG_GPIO_13_INIT=6153 +USER_CONFIG_GPIO_14_INIT=6153 +USER_CONFIG_GPIO_15_INIT=6153 +USER_CONFIG_GPIO_16_INIT=6153 +USER_CONFIG_GPIO_17_INIT=6153 +USER_CONFIG_GPIO_18_INIT=6153 +USER_CONFIG_GPIO_19_INIT=6153 +USER_CONFIG_GPIO_20_INIT=6153 +USER_CONFIG_GPIO_21_INIT=6153 +USER_CONFIG_GPIO_22_INIT=6153 +USER_CONFIG_GPIO_23_INIT=6153 +USER_CONFIG_GPIO_24_INIT=6153 +USER_CONFIG_GPIO_25_INIT=6153 +USER_CONFIG_GPIO_26_INIT=6153 +USER_CONFIG_GPIO_27_INIT=6153 +USER_CONFIG_GPIO_28_INIT=6153 +USER_CONFIG_GPIO_29_INIT=6153 +USER_CONFIG_GPIO_30_INIT=6153 +USER_CONFIG_GPIO_31_INIT=6153 +USER_CONFIG_GPIO_32_INIT=6153 +USER_CONFIG_GPIO_33_INIT=6153 +USER_CONFIG_GPIO_34_INIT=6153 +USER_CONFIG_GPIO_35_INIT=6153 +USER_CONFIG_GPIO_36_INIT=6153 +USER_CONFIG_GPIO_37_INIT=6153 +__GLOBAL_DEFINE_H +MPRJ_IO_PADS_1=19 +MPRJ_IO_PADS_2=19 +MPRJ_IO_PADS=38 +MPRJ_PWR_PADS_1=2 +MPRJ_PWR_PADS_2=2 +MPRJ_PWR_PADS=4 +ANALOG_PADS_1=5 +ANALOG_PADS_2=6 +ANALOG_PADS=11 +USE_CUSTOM_DFFRAM +MEM_WORDS=256 +DFFRAM_WSIZE=4 +DFFRAM_USE_LATCH=0 +RAM_BLOCKS=1 +CLK_DIV=2 +MGMT_INIT=0 +OENB_INIT=0 +DM_INIT=1 +LA_SIZE=128 +USER_SPACE_ADDR=805306368 +USER_SPACE_SIZE=1048572 +IO_CTRL_BITS=13 +POWER_DOMAINS=3'
-
-/home/nouran/caravel//verilog/rtl/caravel.v:236: warning: input port clock is coerced to inout.
+Run tag: first_test 
+invalid mail None
+Start running test:  RTL-gpio_test 
      -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:76   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
      -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
      0.00ns INFO     cocotb                             Running on Icarus Verilog version 10.3 (stable)
-     0.00ns INFO     cocotb                             Running tests with cocotb v1.7.1 from /usr/local/lib/python3.8/dist-packages/cocotb
-     0.00ns INFO     cocotb                             Seeding Python random module with 1684245124
+     0.00ns INFO     cocotb                             Running tests with cocotb v1.7.2 from /usr/local/lib/python3.8/dist-packages/cocotb
+     0.00ns INFO     cocotb                             Seeding Python random module with 1690448388
      0.00ns INFO     cocotb.regression                  pytest not found, install it to enable better AssertionError messages
-     0.00ns INFO     cocotb.regression                  Found test interfaces.common_functions.test_functions.report_test.<locals>.wrapper_func
+     0.00ns INFO     cocotb.regression                  Found test caravel_cocotb.interfaces.common_functions.test_functions.report_test.<locals>.wrapper_func
      0.00ns INFO     cocotb.regression                  running report_test.<locals>.wrapper_func (1/1)
-/home/nouran/caravel-sim-infrastructure/cocotb/interfaces/common_functions/Timeout.py:19: DeprecationWarning: This method is now private.
+/usr/local/lib/python3.8/dist-packages/caravel_cocotb/interfaces/common_functions/Timeout.py:19: DeprecationWarning: This method is now private.
   cocotb.scheduler.add(self._timeout_check())
-/home/nouran/caravel-sim-infrastructure/cocotb/interfaces/common_functions/test_functions.py:59: DeprecationWarning: This method is now private.
+/usr/local/lib/python3.8/dist-packages/caravel_cocotb/interfaces/common_functions/test_functions.py:62: DeprecationWarning: This method is now private.
   cocotb.scheduler.add(max_num_error(num_error, caravelEnv.clk))
      0.00ns INFO     cocotb                              [caravel] start powering up
-Reading /home/nouran/caravel-sim-infrastructure/cocotb/sim//hex_files/gpio_test.hex
-/home/nouran/caravel-sim-infrastructure/cocotb/sim//hex_files/gpio_test.hex loaded into memory
+Reading firmware.hex
+firmware.hex loaded into memory
 Memory 5 bytes = 0x6f 0x00 0x00 0x0b 0x13
-VCD info: dumpfile /home/nouran/caravel-sim-infrastructure/cocotb/sim/first_test/RTL-gpio_test/RTL-gpio_test.vcd opened for output.
+VCD info: dumpfile waves.vcd opened for output.
    225.00ns INFO     cocotb                              [caravel] power up -> connect vdd
    225.00ns INFO     cocotb                              [caravel] power up -> connect vcc
  ===WARNING=== sky130_fd_io__top_xres4v2 :  Width of Input pulse for PAD input (= 225.00 ns)  is found to be in 	he range:  50 ns - 600 ns. In this range, the delay and pulse suppression of the input pulse are PVT dependent. : caravel_top.uut.padframe.resetb_pad       225
@@ -198,17 +176,20 @@ VCD info: dumpfile /home/nouran/caravel-sim-infrastructure/cocotb/sim/first_test
  ===WARNING=== sky130_fd_io__top_xres4v2 :  Width of Input pulse for PAD input (= 300.00 ns)  is found to be in 	he range:  50 ns - 600 ns. In this range, the delay and pulse suppression of the input pulse are PVT dependent. : caravel_top.uut.padframe.resetb_pad       525
  ===WARNING=== sky130_fd_io__top_xres4v2 :  Width of Input pulse for PAD input (= 500.00 ns)  is found to be in 	he range:  50 ns - 600 ns. In this range, the delay and pulse suppression of the input pulse are PVT dependent. : caravel_top.uut.padframe.resetb_pad      1025
   1050.00ns INFO     cocotb                              [caravel] finish resetting
-1578050.00ns INFO     cocotb                             All gpios '00000000000000000000000000000010001111'
-1578050.00ns INFO     cocotb                             [TEST] Pass the gpio value is '0x8f'
-1578050.00ns INFO     cocotb                             Test passed with (0)criticals (0)errors (0)warnings 
-1578050.00ns INFO     cocotb                             Cycles consumed = 63122 recommened timeout = 63754 cycles
-1578050.00ns INFO     cocotb.regression                  report_test.<locals>.wrapper_func passed
-1578050.00ns INFO     cocotb.regression                  **************************************************************************************************************************************
-                                                         ** TEST                                                                          STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
-                                                         **************************************************************************************************************************************
-                                                         ** interfaces.common_functions.test_functions.report_test.<locals>.wrapper_func   PASS     1578050.00          40.21      39247.62  **
-                                                         **************************************************************************************************************************************
-                                                         ** TESTS=1 PASS=1 FAIL=0 SKIP=0                                                            1578050.00          40.22      39233.14  **
-                                                         **************************************************************************************************************************************
+  1325.00ns INFO     cocotb                              [caravel] release housekeeping SPI transmission
+1607150.00ns INFO     cocotb                             All gpios '00000000000000000000000000000010001111'
+1607150.00ns INFO     cocotb                             [TEST] Pass the gpio value is '0x8f'
+1607150.00ns INFO     cocotb                             Test passed with (0)criticals (0)errors (0)warnings 
+1607150.00ns INFO     cocotb                             Cycles consumed = 64286 recommened timeout = 70715 cycles
+1607150.00ns INFO     cocotb.regression                  report_test.<locals>.wrapper_func passed
+1607150.00ns INFO     cocotb.regression                  *****************************************************************************************************************************************************
+                                                         ** TEST                                                                                         STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                         *****************************************************************************************************************************************************
+                                                         ** caravel_cocotb.interfaces.common_functions.test_functions.report_test.<locals>.wrapper_func   PASS     1607150.00          24.25      66285.88  **
+                                                         *****************************************************************************************************************************************************
+                                                         ** TESTS=1 PASS=1 FAIL=0 SKIP=0                                                                           1607150.00          24.26      66240.99  **
+                                                         *****************************************************************************************************************************************************
+                                                         
+Test: RTL-gpio_test has passed
 ```
 which shows that the test has passed successfully. 
