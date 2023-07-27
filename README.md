@@ -38,9 +38,11 @@ The python testbench is used to monitor the signals of the Caravel chip just lik
 Continuing on the example above,  if we want to check whether the gpios are set to the correct value, we can do that using the following code. You can find the source file [here](https://github.com/NouranAbdelaziz/caravel_user_project_cocotb_tutorial/blob/cocotb_dev/verilog/dv/cocotb/gpio_test/gpio_test.py):
 
 ```
-from cocotb_includes import * 
+from caravel_cocotb.caravel_interfaces import test_configure
+from caravel_cocotb.caravel_interfaces import report_test
+from caravel_cocotb.caravel_interfaces import UART
+from caravel_cocotb.caravel_interfaces import SPI
 import cocotb
-
 @cocotb.test() 
 @report_test 
 async def gpio_test(dut):
@@ -56,8 +58,11 @@ async def gpio_test(dut):
    else:
       cocotb.log.error (f"[TEST] Fail the gpio value is :'{hex(gpio_value_int)}' expected {hex(expected_gpio_value)}")
 ```
-* ``from cocotb_includes import *`` is to include the python APIs for Caravel. It must be included in any python testbench you create 
-* ``import cocotb`` is to import cocotb library 
+* ``from caravel_cocotb.caravel_interfaces import test_configure
+from caravel_cocotb.caravel_interfaces import report_test
+from caravel_cocotb.caravel_interfaces import UART
+from caravel_cocotb.caravel_interfaces import SPI`` is to include the python APIs for Caravel. It must be included in any python testbench you create 
+* ``import cocotb`` is to import cocotb library. It must be included in any python testbench you create 
 * ``@cocotb.test()`` is a function wrapper which must be used before any cocotb test. You can read more about it [here](https://docs.cocotb.org/en/stable/quickstart.html#creating-a-test)
 * ``@report_test `` is a function wrapper which is used to configure the test reports
 * ``async def gpio_test(dut):``  is to define the test function. The async keyword is the syntax used to define python coroutine function (a function which can run in the background and does need to complete executing in order to return to the caller function). You must name this function the same name you will give the test in the ``-test`` argument while running. Here for example I used ``gpio_test`` for both. 
